@@ -1,8 +1,17 @@
 ﻿@page "/"
 
-<PageTitle>Bryce Campain - Software Development Leader</PageTitle>
+<PageTitle>Bryce Campain - Information Technology Leader</PageTitle>
+@inject IJSRuntime JS
 
-<div class="resume-page">
+<div class="fun-toggle">
+    <span class="fun-label">FUN</span>
+    <label class="fun-switch">
+        <input type="checkbox" checked="@_funMode" @onchange="OnFunToggle" />
+        <span class="fun-slider"></span>
+    </label>
+</div>
+
+<div class="resume-page @(FunMode ? "fun-mode" : "")">
     <!-- Header -->
     <header class="resume-header">
         <div>
@@ -23,7 +32,7 @@
     </header>
 
     <!-- Summary -->
-    <section class="resume-summary-card">
+    <section class="resume-summary-card fun-card @CardCss(CardId.Summary)" @onclick="@OnSummaryClick">
         <p>
             Experienced in guiding engineering teams through complex platform modernization and large-scale customer migrations.
             Aligns technical execution with business priorities, cultivating collaborative team environments rooted in autonomy,
@@ -37,7 +46,7 @@
         <section class="resume-section">
             <h2 class="resume-section-title">Technical Skills</h2>
 
-            <div class="experience-item">
+            <div class="experience-item fun-card @CardCss(CardId.Skills)" @onclick="@OnSkillsClick">
                 <div class="skills-group">
                     <h3>Languages &amp; Frameworks</h3>
                     <p>C#, .NET, JavaScript, VueJS, RiotJS, Node.js/NPM, HTML, XML, JSON</p>
@@ -61,7 +70,7 @@
 
             <section class="resume-section education-section">
                 <h2 class="resume-section-title">Education</h2>
-                <div class="experience-item">
+                <div class="experience-item fun-card @CardCss(CardId.Education)" @onclick="@OnEducationClick">
                     <h3>Bachelor of Business Administration (BBA)</h3>
                     <div class="experience-sub-header">Management Information Systems</div>
                     <div class="experience-meta">
@@ -76,7 +85,7 @@
 
             <div class="resume-actions">
                 <a href="/Bryce-Campain-Resume-Nov2025.pdf"
-                class="download-resume-button"
+                class="download-resume-button @(FunMode ? "fun-button" : "")"
                 download>
                     Download PDF Résumé
                 </a>
@@ -88,7 +97,7 @@
             <h2 class="resume-section-title">Professional Experience</h2>
 
             <!-- Vistra -->
-            <article class="experience-item">
+            <article class="experience-item fun-card @CardCss(CardId.Vistra)" @onclick="@OnVistraClick">
                 <header class="experience-header">
                     <div>
                         <h3>Software Development Manager</h3>
@@ -119,7 +128,7 @@
             </article>
 
             <!-- ARGO -->
-            <article class="experience-item">
+            <article class="experience-item fun-card @CardCss(CardId.Argo)" @onclick="@OnArgoClick">
                 <header class="experience-header">
                     <div>
                         <h3>Application Development Lead</h3>
@@ -146,3 +155,129 @@
         </section>
     </div>
 </div>
+
+@code
+{
+    private static readonly FunAnimationConfig DefaultConfig = new() {
+        PopDuration = 320,
+        RespawnDelay = 1000,
+        RespawnDuration = 3000
+    };
+
+    private FunAnimationConfig _config = DefaultConfig;
+    private bool _funMode;
+    private bool FunMode => _funMode;
+
+    private enum CardId {
+        Summary,
+        Skills,
+        Education,
+        Vistra,
+        Argo
+    }
+    private enum CardState {
+        Normal,
+        Popped,
+        Respawning
+    }
+
+    private readonly Dictionary<CardId, CardState> _cardStates = new();
+
+    private string CardCss(CardId id) {
+        if (!FunMode) 
+            return string.Empty;
+
+        _cardStates.TryGetValue(id, out var state);
+
+        return state switch {
+            CardState.Popped     => "fun-card--popped",
+            CardState.Respawning => "fun-card--respawning",
+            _                    => "fun-card--active"
+        };
+    }
+
+    private Task OnSummaryClick() => OnCardClick(CardId.Summary);
+    private Task OnSkillsClick() => OnCardClick(CardId.Skills);
+    private Task OnEducationClick() => OnCardClick(CardId.Education);
+    private Task OnVistraClick() => OnCardClick(CardId.Vistra);
+    private Task OnArgoClick() => OnCardClick(CardId.Argo);
+
+    private async Task OnFunToggle(ChangeEventArgs e) {
+        var newValue = e?.Value is bool b && b;
+        if (newValue == _funMode)
+            return;
+
+        _funMode = newValue;
+
+        if (!_funMode)
+        {
+            _cardStates.Clear();
+            _config = DefaultConfig;
+            try
+            {
+                await JS.InvokeVoidAsync("funConfigLoader.reset");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fun config reset failed: {ex.Message}");
+            }
+        }
+        else
+        {
+            await LoadConfigAsync();
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task OnCardClick(CardId id) {
+        if (!FunMode) return;
+
+        _cardStates.TryGetValue(id, out var current);
+        if (current == CardState.Popped || current == CardState.Respawning)
+            return; //ignore additional clicks while animating
+
+        _cardStates[id] = CardState.Popped;
+        StateHasChanged();
+
+        var popDurationMs = _config.PopDuration;
+        var respawnDelayMs = _config.RespawnDelay; // Time before reappearing
+        var respawnDuration = _config.RespawnDuration;
+
+        //Wait until it's time to respawn
+        await Task.Delay(popDurationMs + respawnDelayMs);
+
+        _cardStates[id] = CardState.Respawning;
+        StateHasChanged();
+
+        await Task.Delay(respawnDuration);
+
+        _cardStates[id] = CardState.Normal;
+        StateHasChanged();
+    }
+
+    private async Task LoadConfigAsync() {
+        try {
+            var cfg = await JS.InvokeAsync<FunAnimationConfig>("funConfigLoader.loadConfig");
+            if (cfg is not null)
+                _config = MergeWithDefaults(cfg);
+            else
+                _config = DefaultConfig;
+        }
+        catch {
+            _config = DefaultConfig;
+        }
+    }
+
+    private static FunAnimationConfig MergeWithDefaults(FunAnimationConfig cfg) => new() {
+        PopDuration = cfg.PopDuration > 0 ? cfg.PopDuration : DefaultConfig.PopDuration,
+        RespawnDelay = cfg.RespawnDelay > 0 ? cfg.RespawnDelay : DefaultConfig.RespawnDelay,
+        RespawnDuration = cfg.RespawnDuration > 0 ? cfg.RespawnDuration : DefaultConfig.RespawnDuration
+    };
+
+    private class FunAnimationConfig {
+        public int PopDuration { get; set; }
+        public int RespawnDelay { get; set; }
+        public int RespawnDuration { get; set; }
+    }
+}
