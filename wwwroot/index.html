@@ -27,6 +27,66 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="css/app.css" />
+
+    <script>
+        // Load animation config from blob (SAS) with local fallback, expose to Blazor/CSS,
+        // and allow reset so a toggle off/on re-fetches the latest config.
+        window.funConfigLoader = (() => {
+            const defaultConfig = { popDuration: 320, respawnDelay: 1000, respawnDuration: 3000 };
+            const sources = [
+                "https://bryceresumeconfigstore.blob.core.windows.net/config/brycefunresumeconfig.json?sp=r&st=2025-11-22T16:13:08Z&se=2027-09-01T23:28:08Z&spr=https&sv=2024-11-04&sr=b&sig=eOOwbpqwBhTfrCbVGuI3YHG3jccXNAFXUHfyJAPgiio%3D",
+                "/config.json"
+            ];
+
+            const normalize = (cfg) => ({
+                popDuration: Number(cfg?.popDuration) || defaultConfig.popDuration,
+                respawnDelay: Number(cfg?.respawnDelay) || defaultConfig.respawnDelay,
+                respawnDuration: Number(cfg?.respawnDuration) || defaultConfig.respawnDuration
+            });
+
+            const applyCssVars = (cfg) => {
+                const root = document.documentElement.style;
+                root.setProperty("--fun-pop-duration", `${cfg.popDuration}ms`);
+                root.setProperty("--fun-respawn-delay", `${cfg.respawnDelay}ms`);
+                root.setProperty("--fun-respawn-duration", `${cfg.respawnDuration}ms`);
+            };
+
+            let cachedPromise;
+            let lastConfig;
+
+            const loadConfig = async () => {
+                if (lastConfig) return lastConfig;
+                if (cachedPromise) return cachedPromise;
+                cachedPromise = (async () => {
+                    for (const url of sources) {
+                        try {
+                            const response = await fetch(url, { cache: "no-cache" });
+                            if (response.ok) {
+                                const cfg = normalize(await response.json());
+                                applyCssVars(cfg);
+                                lastConfig = cfg;
+                                return cfg;
+                            }
+                        } catch (err) {
+                            console.warn("funConfigLoader fetch failed", url, err);
+                        }
+                    }
+                    applyCssVars(defaultConfig);
+                    lastConfig = defaultConfig;
+                    return defaultConfig;
+                })();
+                return cachedPromise;
+            };
+
+            const reset = () => {
+                cachedPromise = undefined;
+                lastConfig = undefined;
+                applyCssVars(defaultConfig);
+            };
+
+            return { loadConfig, reset };
+        })();
+    </script>
 </head>
 <body>
     <div id="app">Loading...</div>
