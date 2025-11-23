@@ -1,0 +1,40 @@
+name: "Content Update"
+description: "Change or add resume/site content"
+title: "[Content]: "
+labels: ["content"]
+body:
+  - type: textarea
+    id: change
+    attributes:
+      label: What needs updating?
+      description: Describe the content change clearly.
+      placeholder: "Update Ambit/Vistra role bullets to include Opensearch and Swagger."
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Where on the site?
+      description: Page/section/component where the content lives.
+      placeholder: "Experience > Vistra CIS Lead section; Resume PDF; Summary blurb;"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed text (draft)
+      description: Paste the new text or a rough draft.
+      placeholder: "New bullets:\n- Led ...\n- Implemented ..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Tone, formatting, or style guidance.
+      placeholder: "Keep consistent tense; no em dashes; mirror PDF wording."
+    validations:
+      required: false

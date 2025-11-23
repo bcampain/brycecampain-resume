@@ -1,0 +1,50 @@
+name: "Refactor / Tech Debt"
+description: "Cleanup, restructuring, or non-user-visible improvements"
+title: "[Refactor]: "
+labels: ["refactor"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What’s the problem?
+      description: What smells, duplication, or risk are we addressing?
+      placeholder: "Header component mixes layout + logic and duplicates CSS across pages."
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal / Outcome
+      description: What will be better after this refactor?
+      placeholder: "Separate layout into Header.razor + Header.razor.css; remove duplicates."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope (what’s included / excluded)
+      placeholder: |
+        Included:
+        - HeaderNav and Footer cleanup
+        Excluded:
+        - Any visual restyling
+    validations:
+      required: false
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Effort (T-shirt size)
+      options: ["XS", "S", "M", "L", "XL"]
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Risks
+      placeholder: "Watch for regression in mobile menu."
+    validations:
+      required: false

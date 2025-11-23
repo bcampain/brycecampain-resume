@@ -1,0 +1,49 @@
+name: "Bug"
+description: "Something is broken or behaving incorrectly"
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: "The navbar should stay pinned when scrolling."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: "Navbar disappears after scrolling past the hero."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open site on iPhone Safari
+        2. Scroll to Experience section
+        3. Observe navbar disappears
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Browser/device/OS if relevant.
+      placeholder: "iPhone 13 mini, iOS 18.x, Safari"
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots / logs
+      description: Paste any images or errors.
+      placeholder: "Attach screenshot or console output."
+    validations:
+      required: false

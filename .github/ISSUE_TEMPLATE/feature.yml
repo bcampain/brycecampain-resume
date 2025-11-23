@@ -1,0 +1,51 @@
+name: "Feature"
+description: "New functionality or enhancement"
+title: "[Feature]: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What are we building? One or two sentences.
+      placeholder: "Add a new widget to FUN mode."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why / Value
+      description: Why does this matter? What problem or goal does it serve?
+      placeholder: "Showcases that I know how to add widgets."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Bullet list of what “done” looks like.
+      placeholder: |
+        - Widget is visible on desktop and mobile when FUN mode enabled
+        - Widget does its widget thing
+        - Matches site styling
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Effort (T-shirt size)
+      options: ["XS", "S", "M", "L", "XL"]
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Links
+      description: Anything else. References, screenshots, ideas.
+      placeholder: "Related component: fun-toggle. Make sure to add ALT text."
+    validations:
+      required: false
