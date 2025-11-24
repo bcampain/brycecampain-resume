@@ -9,6 +9,9 @@
         <input type="checkbox" checked="@_funMode" @onchange="OnFunToggle" />
         <span class="fun-slider"></span>
     </label>
+    @if (FunMode){
+        <span><i class="fa-regular fa-face-laugh-beam fa-xl"></i></span>
+    }
 </div>
 
 <div class="resume-page @(FunMode ? "fun-mode" : "")">
