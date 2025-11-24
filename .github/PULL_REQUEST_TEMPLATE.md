@@ -31,7 +31,5 @@
 - [ ] My code follows the code style of this project.
 - [ ] My change requires a change to the documentation.
 - [ ] I have updated the documentation accordingly.
-
-_Not yet required:_
-- [X] I have added tests to cover my changes. 
-- [X] All new and existing tests passed.
+- [ ] I have added tests to cover my changes. 
+- [ ] All new and existing tests passed.
