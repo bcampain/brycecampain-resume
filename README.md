@@ -28,6 +28,10 @@ dotnet watch run
 # App serves on the URL shown in the console (configured as https://localhost:7253 in launchsettings)
 ```
 
+## Testing
+- Run tests: `dotnet test`
+- Run just the test project: `dotnet test BryceCampainResume.Tests/BryceCampainResume.Tests.csproj`
+
 ## Configuration
 - Animation config: fetched from a signed Azure Blob URL first, falling back to `wwwroot/config.json`. You can use that config as a template and save to blob storage.
 - SEO/meta: adjust title, description, Open Graph, and canonical link in `wwwroot/index.html`.
