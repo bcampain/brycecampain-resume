@@ -25,12 +25,6 @@
             <div>Chicago, IL</div>
             <div><a href="tel:12148023717">214.802.3717</a></div>
             <div><a href="mailto:bryce@campain.me">bryce@campain.me</a></div>
-            <div>
-                <a href="https://www.linkedin.com/in/brycecampain"
-                   target="_blank" rel="noopener noreferrer">
-                    linkedin.com/in/brycecampain
-                </a>
-            </div>
         </div>
     </header>
 
@@ -47,29 +41,55 @@
     <div class="resume-body-grid">
         <!-- Left column -->
         <section class="resume-section">
-            <h2 class="resume-section-title">Technical Skills</h2>
+            <section class="resume-section skills-section">
+                <h2 class="resume-section-title">Technical Skills</h2>
 
-            <div class="experience-item fun-card @CardCss(CardId.Skills)" @onclick="@OnSkillsClick">
-                <div class="skills-group">
-                    <h3>Languages &amp; Frameworks</h3>
-                    <p>C#, .NET, JavaScript, VueJS, RiotJS, Node.js/NPM, HTML, XML, JSON</p>
-                </div>
+                <div class="experience-item fun-card @CardCss(CardId.Skills)" @onclick="@OnSkillsClick">
+                    <div class="skills-group">
+                        <h3>Languages &amp; Frameworks</h3>
+                        <p>C#, .NET, JavaScript, VueJS, RiotJS, Node.js/NPM, HTML, XML, JSON</p>
+                    </div>
 
-                <div class="skills-group">
-                    <h3>Cloud &amp; DevOps</h3>
-                    <p>Azure, Azure DevOps, Kubernetes, Git, Github, Subversion, Swagger (OpenAPI), Microservices, RESTful APIs</p>
-                </div>
+                    <div class="skills-group">
+                        <h3>Cloud &amp; DevOps</h3>
+                        <p>Azure, Azure DevOps, Kubernetes, Git, Github, Subversion, Swagger (OpenAPI), Microservices, RESTful APIs</p>
+                    </div>
 
-                <div class="skills-group">
-                    <h3>Data &amp; Platforms</h3>
-                    <p>SQL, Microsoft SQL Server, OpenSearch</p>
-                </div>
+                    <div class="skills-group">
+                        <h3>Data &amp; Platforms</h3>
+                        <p>SQL, Microsoft SQL Server, OpenSearch</p>
+                    </div>
 
-                <div class="skills-group">
-                    <h3>Tools &amp; Environments</h3>
-                    <p>Visual Studio, VS Code, Windows, macOS, Microsoft Office</p>
+                    <div class="skills-group">
+                        <h3>Tools &amp; Environments</h3>
+                        <p>Visual Studio, VS Code, Windows, macOS, Microsoft Office</p>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <section class="resume-section links-section">
+                <h2 class="resume-section-title">Links</h2>
+                <div class="experience-item fun-card @CardCss(CardId.Links)" @onclick="@OnLinksClick">
+                    <a class="experience-link" href="https://github.com/bcampain" target="_blank" rel="noopener noreferrer">
+                        <span class="experience-icon">
+                            <i class="fa-brands fa-github fa-2xl"></i>
+                        </span>
+                        <div class="experience-text">
+                            <span class="link-name">GitHub</span>
+                            <span class="link-url">github.com/bcampain</span>
+                        </div>
+                    </a>
+                    <a class="experience-link" href="https://www.linkedin.com/in/brycecampain/" target="_blank" rel="noopener noreferrer">
+                        <span class="experience-icon">
+                            <i class="fa-brands fa-linkedin fa-2xl"></i>
+                        </span>
+                        <div class="experience-text">
+                            <span class="link-name">LinkedIn</span>
+                            <span class="link-url">linkedin.com/in/brycecampain</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
 
             <section class="resume-section education-section">
                 <h2 class="resume-section-title">Education</h2>
@@ -174,6 +194,7 @@
     private enum CardId {
         Summary,
         Skills,
+        Links,
         Education,
         Vistra,
         Argo
@@ -201,6 +222,7 @@
 
     private Task OnSummaryClick() => OnCardClick(CardId.Summary);
     private Task OnSkillsClick() => OnCardClick(CardId.Skills);
+    private Task OnLinksClick() => OnCardClick(CardId.Links);
     private Task OnEducationClick() => OnCardClick(CardId.Education);
     private Task OnVistraClick() => OnCardClick(CardId.Vistra);
     private Task OnArgoClick() => OnCardClick(CardId.Argo);

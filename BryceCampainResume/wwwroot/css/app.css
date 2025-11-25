@@ -144,11 +144,12 @@ html, body {
 
 .resume-contact {
     text-align: right;
-    font-size: 0.9rem;
+    font-size: 1.2 rem;
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
     color: var(--text-muted);
+    margin-top: 0.35rem; /* align contact info slightly lower */
 }
 
 .resume-contact a {
@@ -171,6 +172,10 @@ html, body {
     font-size: 0.97rem;
     line-height: 1.55;
     color: var(--text-main);
+}
+
+.resume-summary-card p {
+    margin: 0;
 }
 
 .resume-actions {
@@ -232,7 +237,7 @@ html, body {
     color: var(--text-muted);
 }
 
-/* Skills & education */
+/* Skills, links & education */
 .skills-group {
     margin-bottom: 0.8rem;
 }
@@ -247,6 +252,66 @@ html, body {
     margin: 0;
     font-size: 0.9rem;
     color: var(--text-muted);
+}
+
+.links-section .experience-item {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.experience-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    z-index: 0;
+}
+
+.experience-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    left: -0.45rem;
+    right: -0.45rem;
+    border-radius: inherit;
+    background: rgba(148, 163, 184, 0.08);
+    opacity: 0;
+    transition: opacity 120ms ease-out;
+    z-index: -1;
+}
+
+.experience-link:hover::before {
+    opacity: 1;
+}
+
+.experience-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.2);
+}
+
+.experience-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    line-height: 1.15;
+}
+
+.link-name {
+    font-weight: 600;
+}
+
+.link-url {
+    font-size: 0.75rem;
+    opacity: 0.7;
 }
 
 .education-section .experience-item h3 {
