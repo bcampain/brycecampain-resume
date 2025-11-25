@@ -17,7 +17,8 @@ public class HomePageTests : BunitContext
         var cut = Render<Pages.Home>();
 
         var link = cut.Find("a.download-resume-button");
-        Assert.Equal("/Bryce-Campain-Resume-Nov2025.pdf", link.GetAttribute("href"));
+
+        Assert.Equal("/api/download-resume", link.GetAttribute("href"));
         Assert.Equal("Download PDF Résumé", link.TextContent.Trim());
     }
 
