@@ -7,8 +7,12 @@ namespace api;
 
 public class DownloadResume
 {
-    private static readonly HttpClient HttpClient = new();
-    private const string ResumeUrl = "https://bryceresumestore.blob.core.windows.net/public/Bryce-Campain-Resume.pdf";
+    private readonly IResumeStorageService _resumeStorageService;
+
+    public DownloadResume(IResumeStorageService resumeStorageService)
+    {
+        _resumeStorageService = resumeStorageService;
+    }
 
     [Function("DownloadResume")]
     public async Task<HttpResponseData> Run(
@@ -19,15 +23,18 @@ public class DownloadResume
         var logger = executionContext.GetLogger("DownloadResume");
         logger.LogInformation("Resume download requested.");
 
-        using var upstreamResponse = await HttpClient.GetAsync(ResumeUrl);
-        if (!upstreamResponse.IsSuccessStatusCode)
+        byte[] pdfBytes;
+        try
         {
+            pdfBytes = await _resumeStorageService.DownloadAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Unable to download resume from blob storage.");
             var error = req.CreateResponse(HttpStatusCode.InternalServerError);
             await error.WriteStringAsync("Unable to fetch resume at this time.");
             return error;
         }
-
-        var pdfBytes = await upstreamResponse.Content.ReadAsByteArrayAsync();
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "application/pdf");

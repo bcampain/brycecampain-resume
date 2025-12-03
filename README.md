@@ -28,14 +28,21 @@ dotnet watch run
 # App serves on the URL shown in the console (configured as https://localhost:7253 in launchsettings)
 ```
 
-## Testing
+## Blazor WASM Testing
 - Run tests: `dotnet test`
 - Run just the test project: `dotnet test BryceCampainResume.Tests/BryceCampainResume.Tests.csproj`
+
+## Azure Functions API (/api)
+- Functions: `GET /api/download-resume` (streams PDF), `GET /api/resume-metadata` (returns `{ "revisionText": "<metadata or Unknown>" }`)
+- Shared blob access is via `ResumeStorageService`, pulling from `public/Bryce-Campain-Resume.pdf` with `revisionDate` metadata
+- Local run: `func start --cors http://localhost:7253 --cors-credentials` (requires Azure Functions Core Tools; uses the public blob so no local storage emulator needed)
+- Local HTTP base: `http://localhost:7071` (default Functions host)
+- Once you've started up the func you can run the Blazor WASM app at `https://localhost:7253` and it should be able to hit the running func worker
 
 ## Configuration
 - Animation config: fetched from a signed Azure Blob URL first, falling back to `wwwroot/config.json`. You can use that config as a template and save to blob storage.
 - SEO/meta: adjust title, description, Open Graph, and canonical link in `wwwroot/index.html`.
-- Resume PDF: replace `wwwroot/Bryce-Campain-Resume-Nov2025.pdf` and keep the link in `Pages/Home.razor` in sync.
+- Resume PDF: upload latest version of resume PDF to `/public/Bryce-Campain-Resume.pdf` with `revisionDate` metadata set and the Download PDF Resume button revision will auto-update.
 
 ## Deployment
 - Build/publish: `dotnet publish -c Release`

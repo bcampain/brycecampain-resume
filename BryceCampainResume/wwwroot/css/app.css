@@ -183,6 +183,13 @@ html, body {
     text-align: center;
 }
 
+.resume-revision-text {
+    margin-top: 0.45rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
 .download-resume-button {
     display: inline-flex;
     align-items: center;

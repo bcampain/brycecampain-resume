@@ -1,7 +1,9 @@
 ﻿@page "/"
+@using System.Net.Http.Json
 
 <PageTitle>Bryce Campain - Information Technology Leader</PageTitle>
 @inject IJSRuntime JS
+@inject HttpClient Http
 
 <div class="fun-toggle">
     <span class="fun-label">FUN</span>
@@ -113,6 +115,10 @@
                 download="Bryce-Campain-Resume.pdf">
                     Download PDF Résumé
                 </a>
+                @if (!string.IsNullOrWhiteSpace(_revisionText))
+                {
+                    <div class="resume-revision-text">Revision: @_revisionText</div>
+                }
             </div>
         </section>
 
@@ -191,6 +197,7 @@
     private FunAnimationConfig _config = DefaultConfig;
     private bool _funMode;
     private bool FunMode => _funMode;
+    private string? _revisionText;
 
     private enum CardId {
         Summary,
@@ -227,6 +234,9 @@
     private Task OnEducationClick() => OnCardClick(CardId.Education);
     private Task OnVistraClick() => OnCardClick(CardId.Vistra);
     private Task OnArgoClick() => OnCardClick(CardId.Argo);
+    protected override async Task OnInitializedAsync() {
+        await LoadRevisionTextAsync();
+    }
 
     private async Task OnFunToggle(ChangeEventArgs e) {
         var newValue = e?.Value is bool b && b;
@@ -254,6 +264,17 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task LoadRevisionTextAsync() {
+        try {
+            var metadata = await Http.GetFromJsonAsync<ResumeMetadataResponse>("api/resume-metadata");
+            _revisionText = metadata?.RevisionText ?? "Unknown";
+        }
+        catch (Exception ex) {
+            Console.Error.WriteLine($"Failed to load resume metadata: {ex.Message}");
+            _revisionText = "Unknown";
+        }
     }
 
     private async Task OnCardClick(CardId id) {
@@ -305,5 +326,9 @@
         public int PopDuration { get; set; }
         public int RespawnDelay { get; set; }
         public int RespawnDuration { get; set; }
+    }
+
+    private class ResumeMetadataResponse {
+        public string? RevisionText { get; set; }
     }
 }
