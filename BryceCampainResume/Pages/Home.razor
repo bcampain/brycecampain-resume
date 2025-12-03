@@ -1,7 +1,9 @@
 ﻿@page "/"
+@using System.Net.Http.Json
 
 <PageTitle>Bryce Campain - Information Technology Leader</PageTitle>
 @inject IJSRuntime JS
+@inject HttpClient Http
 
 <div class="fun-toggle">
     <span class="fun-label">FUN</span>
@@ -31,10 +33,11 @@
     <!-- Summary -->
     <section class="resume-summary-card fun-card @CardCss(CardId.Summary)" @onclick="@OnSummaryClick">
         <p>
-            Experienced in guiding engineering teams through complex platform modernization and large-scale customer migrations.
-            Aligns technical execution with business priorities, cultivating collaborative team environments rooted in autonomy,
-            shared accountability, and continuous improvement. Known for reducing system fragmentation, improving product reliability,
-            and enabling teams to ship high-quality solutions efficiently and sustainably.
+            Experienced software engineering leader guiding teams through complex cloud and platform modernization 
+            and large-scale customer migrations in regulated environments. Aligns technical execution with business 
+            priorities, cultivating collaborative team environments rooted in autonomy, shared accountability and 
+            continuous improvement. Known for reducing system fragmentation, improving reliability of user-facing 
+            platforms and enabling teams to ship high-quality solutions efficiently and sustainably.
         </p>
     </section>
 
@@ -52,7 +55,7 @@
 
                     <div class="skills-group">
                         <h3>Cloud &amp; DevOps</h3>
-                        <p>Azure, Azure DevOps, Kubernetes, Git, Github, Subversion, Swagger (OpenAPI), Microservices, RESTful APIs</p>
+                        <p>Azure (Paas/IaaS), Kubernetes, Containerized Microservices, RESTful APIs, Git, Subversion, Swagger (OpenAPI)</p>
                     </div>
 
                     <div class="skills-group">
@@ -62,7 +65,7 @@
 
                     <div class="skills-group">
                         <h3>Tools &amp; Environments</h3>
-                        <p>Visual Studio, VS Code, Windows, macOS, Microsoft Office</p>
+                        <p>Azure DevOps, GitHub, Visual Studio, VS Code, Windows, MacOS, Microsoft Office</p>
                     </div>
                 </div>
             </section>
@@ -112,6 +115,10 @@
                 download="Bryce-Campain-Resume.pdf">
                     Download PDF Résumé
                 </a>
+                @if (!string.IsNullOrWhiteSpace(_revisionText))
+                {
+                    <div class="resume-revision-text">Revision: @_revisionText</div>
+                }
             </div>
         </section>
 
@@ -135,18 +142,18 @@
                     </div>
                 </header>
                 <p class="experience-tagline">
-                    Promoted from full-stack developer to development manager following Vistra's acquisition of Ambit Energy.
-                    Led two agile development teams responsible for CRM platforms serving approximately 465,000 active customer accounts
-                    across two production environments.
+                    Promoted from full-stack developer to development manager following Vistra's acquisition of Ambit Energy. 
+                    Led two agile development teams delivering cloud-based CRM and microservices platforms serving ~465,000 
+                    active customer accounts across two regulated production environments.
                 </p>
                 <ul class="experience-list">
                     <li>Led a team of 4 developers and 1 QA, providing coaching, career guidance, performance feedback, and technical direction.</li>
-                    <li>Migrated 383,000 customer accounts from a legacy CRM to an in-house SAP solution, reducing system fragmentation and streamlining customer operations.</li>
-                    <li>Oversaw migration of 85,000+ Midwest/Northeast market customer accounts to the next-generation CRM platform, consolidating brands into a unified technology foundation.</li>
-                    <li>Delivered three full LandPower platform migrations in under one year, accelerating business unit alignment and reducing manual exception handling.</li>
-                    <li>Implemented and enforced a scalable Git branching strategy to support a multi-repository submodule architecture, then refined standards with engineers post-rollout.</li>
-                    <li>Expanded management scope to include a second development team, taking on new production applications while maintaining delivery commitments.</li>
-                    <li>Led structured knowledge-transfer and transition planning during organizational restructuring, ensuring continuity and system stability as responsibilities moved offshore.</li>
+                    <li>Migrated 383,000 customer accounts from legacy CRM to an in-house SAP solution, reducing system fragmentation and streamlining customer operations and meeting stringent data and audit requirements.</li>
+                    <li>Oversaw migration of 85,000+ Midwest/Northeast market customer accounts to the next-generation CRM platform, consolidating brands into a unified technology foundation still in use today and aligning delivery with product and operations stakeholders.</li>
+                    <li>Delivered three full LandPower platform migrations in under one year, coordinating multiple engineering workstreams to accelerate business unit alignment and reduce manual exception handling.</li>
+                    <li>Implemented and enforced a scalable Git branching strategy to support a multi-repository submodule architecture and CI/CD pipelines; collaborated with engineers to refine standards post-rollout.</li>
+                    <li>Expanded management scope to include a second development team, taking on new production applications while maintaining delivery commitments and service-level expectations.</li>
+                    <li>Led structured knowledge transfer and transition planning during organizational restructuring, mitigating delivery and operational risk as responsibilities transitioned to offshore resources.</li>
                 </ul>
             </article>
 
@@ -165,13 +172,13 @@
                     </div>
                 </header>
                 <p class="experience-tagline">
-                    Promoted three times in five years, progressing from entry-level developer to development lead.
+                    Promoted three times in five years, progressing from entry-level developer to development lead in a banking software organization.
                 </p>
                 <ul class="experience-list">
-                    <li>Led 2-5 person development teams through the full SDLC for multiple production implementations.</li>
+                    <li>Led 2-5 person development teams through full SDLC for multiple production implementations in highly regulated environments.</li>
                     <li>Taught and mentored developers in ARGO's proprietary programming language and internal tooling.</li>
-                    <li>Designed and delivered a Virtual Te found itller Kiosk solution adopted by Regions Bank.</li>
-                    <li>Maintained a defect first-time resolution rate exceeding company benchmarks.</li>
+                    <li>Designed and delivered an innovative Virtual Teller Kiosk solution for Regions Bank, enhancing customer self-service capabilities.</li>
+                    <li>Maintained a defect first-time resolution rate exceeding company benchmarks, improving production stability and customer satisfaction.</li>
                     <li>Established structured code review and peer testing practices on the Regions Teller team to improve quality and shared accountability.</li>
                 </ul>
             </article>
@@ -190,6 +197,7 @@
     private FunAnimationConfig _config = DefaultConfig;
     private bool _funMode;
     private bool FunMode => _funMode;
+    private string? _revisionText;
 
     private enum CardId {
         Summary,
@@ -226,6 +234,9 @@
     private Task OnEducationClick() => OnCardClick(CardId.Education);
     private Task OnVistraClick() => OnCardClick(CardId.Vistra);
     private Task OnArgoClick() => OnCardClick(CardId.Argo);
+    protected override async Task OnInitializedAsync() {
+        await LoadRevisionTextAsync();
+    }
 
     private async Task OnFunToggle(ChangeEventArgs e) {
         var newValue = e?.Value is bool b && b;
@@ -253,6 +264,17 @@
         }
 
         StateHasChanged();
+    }
+
+    private async Task LoadRevisionTextAsync() {
+        try {
+            var metadata = await Http.GetFromJsonAsync<ResumeMetadataResponse>("api/resume-metadata");
+            _revisionText = metadata?.RevisionText ?? "Unknown";
+        }
+        catch (Exception ex) {
+            Console.Error.WriteLine($"Failed to load resume metadata: {ex.Message}");
+            _revisionText = "Unknown";
+        }
     }
 
     private async Task OnCardClick(CardId id) {
@@ -304,5 +326,9 @@
         public int PopDuration { get; set; }
         public int RespawnDelay { get; set; }
         public int RespawnDuration { get; set; }
+    }
+
+    private class ResumeMetadataResponse {
+        public string? RevisionText { get; set; }
     }
 }

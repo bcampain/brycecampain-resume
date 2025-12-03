@@ -3,6 +3,7 @@
     "api": {
       "commandName": "Project",
       "commandLineArgs": "--port 7227",
+      "ASPNETCORE_ENVIRONMENT": "Development",
       "launchBrowser": false
     }
   }
