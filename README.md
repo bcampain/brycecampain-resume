@@ -5,22 +5,24 @@ A Blazor WebAssembly resume site I built to present my experience, practice mode
 ## Live Site & Resume
 - Live: https://bryce.campain.me
 - Repo: https://github.com/bcampain/brycecampain-resume
-- PDF: `wwwroot/Bryce-Campain-Resume-Nov2025.pdf` (linked in the app)
+- PDF: `https://bryceresumestore.blob.core.windows.net/public/Bryce-Campain-Resume.pdf` (linked in the app)
 
 ## Tech Stack
 - .NET 9, Blazor WebAssembly, C#
+- Azure Functions
 - Static assets and CSS custom styling
 - Azure Blob Storage (animation config), Cloudflare Analytics, canonical SEO/meta tags
 
 ## Features
 - Resume presented as an interactive single-page Blazor app
-- Downloadable resume PDF
+- Downloadable resume PDF with auto-updated revision date
 - “Fun” mode with animated cards; animation timings fetched from signed blob storage with local `wwwroot/config.json` fallback
 - SEO-friendly meta tags, Open Graph, canonical URL
 - Responsive layout with dark gradient styling
 
 ## Getting Started
 Prerequisite: .NET 9 SDK
+Azure Functions Core Tools (api Project)
 
 ```bash
 dotnet restore
